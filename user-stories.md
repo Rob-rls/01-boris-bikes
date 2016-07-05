@@ -12,5 +12,11 @@
   | **Objects**     | **Messages**  |
   |-----------------|---------------|
   | Person          |               |
-  | Bike            |               |
+  | Bike            | working?      |
   | Docking_station | bike_release  |
+
+
+##Diagram
+
+Person - Docking_station - release - true or false?
+Person - Bike - working? - true or false?
