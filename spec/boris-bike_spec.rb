@@ -11,6 +11,11 @@ describe DockingStation do
     expect(docking_station.release_bike).to be_a_kind_of(Bike)
   end
 
+  it 'is expected to release a working bike' do
+    bike = DockingStation.new.release_bike
+    expect(bike).to be_working
+  end
+
   #it { is_expected(DockingStation.respond_to?(:release_bike)).to eq true }
 
 end
