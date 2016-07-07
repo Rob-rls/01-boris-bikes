@@ -57,4 +57,13 @@ describe DockingStation do
 
     end
   end
+
+  context "release bike" do
+    it 'should raise and error if there are no working bikes' do
+      station = DockingStation.new
+      station.dock(Bike.new, false)
+      expect {station.release_bike }.to raise_error("no working bikes at station")
+    end
+  end
+
 end

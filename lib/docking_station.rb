@@ -12,7 +12,8 @@ class DockingStation
 
   def release_bike
     fail "No bikes docked" if empty?
-    bikes.pop
+    fail "no working bikes at station" if working_bikes? == []
+    select_bike
   end
 
   def dock(bike, bike_condition = true)
@@ -21,9 +22,14 @@ class DockingStation
     bikes << bike
   end
 
-  def select_bike
-
+  def working_bikes?
+    bikes.reject{|bike| bike.working == false }
   end
+
+  def select_bike
+    bikes.slice!(bikes.index{|bike| bike.working == true})
+  end
+
   private
 
   def full?
