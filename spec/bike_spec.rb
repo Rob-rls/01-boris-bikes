@@ -1,9 +1,12 @@
-require 'bike'
+require "bike"
 
 describe Bike do
-  it {is_expected.to respond_to (:working)}
-end
+  it "should respond to 'working?'" do
+    expect(subject).to respond_to :working
+  end
 
-describe Bike do
-  it {is_expected.to respond_to (:working=)}
+  it 'shoud be able to update the working status' do
+    expect(subject.working = false).to eq false
+  end
+
 end

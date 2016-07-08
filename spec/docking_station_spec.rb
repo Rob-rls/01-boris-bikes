@@ -1,61 +1,69 @@
 require 'docking_station'
 
 describe DockingStation do
-  it { is_expected.to respond_to(:release_bike)}
 
-  describe '#release_bike' do
-    it 'releases a bike' do
+  context 'responds to' do
+
+    it { is_expected.to respond_to :release_bike }
+
+    it "should raise an error when there are no bikes" do
+      expect { subject.release_bike }.to raise_error("No bikes docked")
+    end
+
+    it "should release a bike which has been docked before" do
       bike = Bike.new
       subject.dock(bike)
       expect(subject.release_bike).to eq bike
+      expect(bike.working).to be true
     end
   end
 
-  describe '#release_bike' do
-    it 'raises an error when there are no bikes available' do
-      expect { subject.release_bike }.to raise_error 'No bikes available'
+  context "docking the bike" do
+
+    it "should respond to 'dock' and check status" do
+      expect(subject).to respond_to(:dock).with(2).argument
+      #bike = [Bike.new]
+      #expect(subject.dock(bike)).to eq bike
+    end
+
+    it "should be able to see the bike" do
+      bike = [Bike.new]
+      subject.dock(bike[0])
+      expect(subject.bikes).to eq bike
+    end
+
+    it "should raise an error when the docking station is full" do
+      bike = Bike.new
+      DockingStation::DEFAULT_CAPACITY.times { subject.dock(bike) }
+      expect { subject.dock(bike) }.to raise_error("docking station full")
+    end
+
+    it "should be able to report the bike as not woring" do
+      bike = Bike.new
+      subject.dock(bike, false)
+      expect(bike.working).to eq false
     end
   end
 
-  it { is_expected.to respond_to(:dock).with(1).arguments}
+  context "capacity" do
 
-  it { is_expected.to respond_to(:bikes) }
+    it "can be changed on initialize" do
+      station = DockingStation.new(30)
+      expect(station.capacity).to eq 30
+    end
 
-  describe '#dock' do
-    it 'return a bike' do
-      subject.dock(Bike.new)
-      expect(subject.bikes).to be_kind_of(Array)
+    it "should default to 20" do
+      expect(subject.capacity).to eq 20
+
     end
   end
 
-  describe '#dock' do
-    it 'raises an error when more than one bike is docked' do
-      #puts subject.DEFAULT_CAPACITY
-      DockingStation::DEFAULT_CAPACITY.times { subject.dock(Bike.new) }
-      expect { subject.dock(Bike.new)}.to raise_error 'Docking Station full'
+  context "release bike" do
+    it 'should raise and error if there are no working bikes' do
+      station = DockingStation.new
+      station.dock(Bike.new, false)
+      expect {station.release_bike }.to raise_error("no working bikes at station")
     end
   end
 
-  #it { is_expected.to respond_to(:dock).with(1).arguments}
-  it 'docking station has defined capacity when created' do
-    station = DockingStation.new(30)
-    #it { is_expected.to respond_to(:)}
-    expect(station.capacity).to eq 30
-  end
-
-  it 'docking station should define default number of bikes' do
-    station = DockingStation.new
-    expect(station.capacity).to eq DockingStation::DEFAULT_CAPACITY
-  end
-
-  it 'docking sation will only release a working bike' do
-    station = DockingStation.new
-    bike2 = Bike.new
-    station.dock(bike2)
-    bike1 = Bike.new
-    bike1.working = false
-    station.dock(bike1)
-    expect(station.release_bike.working).to eq true
-  end
-#  it { expect(subject.release_bike).to raise_error("Sorry no bike is available!") }
 end

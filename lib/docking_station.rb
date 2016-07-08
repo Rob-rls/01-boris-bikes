@@ -2,8 +2,9 @@ require_relative 'bike'
 
 class DockingStation
 
-  attr_reader :bikes, :capacity
   DEFAULT_CAPACITY = 20
+  attr_reader :bikes
+  attr_accessor :capacity
 
   def initialize(capacity = DEFAULT_CAPACITY)
     @bikes = []
@@ -11,24 +12,33 @@ class DockingStation
   end
 
   def release_bike
-    raise 'No bikes available' if empty?
-    # check the array for bikes that are working then only release
-    # working bike
-    bikes.slice!(bikes.find_index{|bike| bike.working})
+    fail "No bikes docked" if empty?
+    fail "no working bikes at station" if working_bikes? == []
+    select_bike
   end
 
-  def dock(bike)
-    fail 'Docking Station full' if full?
-    @bikes << bike
+  def dock(bike, bike_condition = true)
+    fail "docking station full" if full?
+    bike.working = bike_condition
+    bikes << bike
+  end
+
+  def working_bikes?
+    bikes.reject{|bike| bike.working == false }
+  end
+
+  def select_bike
+    bikes.slice!(bikes.index{|bike| bike.working == true})
   end
 
   private
-    def full?
-      @bikes.count >= DEFAULT_CAPACITY
-    end
 
-    def empty?
-      @bikes.empty?
-    end
+  def full?
+    bikes.length >= @capacity
+  end
+
+  def empty?
+    bikes.empty?
+  end
 
 end
