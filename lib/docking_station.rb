@@ -12,7 +12,9 @@ class DockingStation
 
   def release_bike
     raise 'No bikes available' if empty?
-    @bikes.pop
+    # check the array for bikes that are working then only release
+    # working bike
+    bikes.slice!(bikes.find_index{|bike| bike.working})
   end
 
   def dock(bike)
