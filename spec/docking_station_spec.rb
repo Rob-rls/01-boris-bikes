@@ -1,8 +1,10 @@
 require 'docking_station'
 
 describe DockingStation do
+  let (:bike) { double :bike }
 
   context 'responds to' do
+
 
     it { is_expected.to respond_to :release_bike }
 
@@ -10,11 +12,12 @@ describe DockingStation do
       expect { subject.release_bike }.to raise_error("No bikes docked")
     end
 
-    it "should release a bike which has been docked before" do
-      bike = Bike.new
+    it "should release a working bike" do
+      allow(bike).to receive(:working).and_return(true)
+      allow(bike).to receive(:working=).and_return(true)
       subject.dock(bike)
-      expect(subject.release_bike).to eq bike
-      expect(bike.working).to be true
+      released_bike = subject.release_bike
+      expect(released_bike.working).to be true
     end
   end
 
@@ -26,20 +29,17 @@ describe DockingStation do
       #expect(subject.dock(bike)).to eq bike
     end
 
-    it "should be able to see the bike" do
-      bike = [Bike.new]
-      subject.dock(bike[0])
-      expect(subject.bikes).to eq bike
-    end
+    it {is_expected.to respond_to :bikes }
 
     it "should raise an error when the docking station is full" do
-      bike = Bike.new
+      allow(bike).to receive(:working=)
       DockingStation::DEFAULT_CAPACITY.times { subject.dock(bike) }
       expect { subject.dock(bike) }.to raise_error("docking station full")
     end
 
     it "should be able to report the bike as not woring" do
-      bike = Bike.new
+      allow(bike).to receive(:working=)
+      allow(bike).to receive(:working).and_return(false)
       subject.dock(bike, false)
       expect(bike.working).to eq false
     end
