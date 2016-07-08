@@ -50,6 +50,11 @@ describe DockingStation do
 
   it 'docking sation will only release a working bike' do
     station = DockingStation.new
+    bike2 = Bike.new
+    station.dock(bike2)
+    bike1 = Bike.new
+    bike1.working = false
+    station.dock(bike1)
     expect(station.release_bike.working).to eq true
   end
 #  it { expect(subject.release_bike).to raise_error("Sorry no bike is available!") }
