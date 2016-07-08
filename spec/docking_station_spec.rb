@@ -37,10 +37,15 @@ describe DockingStation do
   end
 
   #it { is_expected.to respond_to(:dock).with(1).arguments}
-  describe 'docking station has defined capacity when created' do
+  it 'docking station has defined capacity when created' do
     station = DockingStation.new(30)
     #it { is_expected.to respond_to(:)}
-    expect { station.capacity }.to eq 30
+    expect(station.capacity).to eq 30
+  end
+
+  it 'docking station should define default number of bikes' do
+    station = DockingStation.new
+    expect(station.capacity).to eq DockingStation::DEFAULT_CAPACITY
   end
 
 #  it { expect(subject.release_bike).to raise_error("Sorry no bike is available!") }
